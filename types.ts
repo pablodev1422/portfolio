@@ -8,7 +8,7 @@ export interface Project {
   description: string;
   link: string | null;
   image: string;
-  video: string;
+  video?: string | null;
 }
 
 export interface MagneticButtonProps {
