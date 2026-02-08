@@ -1,41 +1,49 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { projects } from '../projectsData'; 
+import { Project } from '../types'; 
 import { X, ExternalLink, ArrowUpRight } from 'lucide-react';
 
-// --- COMPONENTE 1: LA TARJETA DEL GRID (FIXED) ---
-const ProjectCard = ({ project, setSelectedId }: { project: any, setSelectedId: (id: number) => void }) => {
+// Interfaz para las props
+interface ProjectCardProps {
+  project: Project;
+  setSelectedId: (id: number | null) => void;
+}
+
+// --- COMPONENTE 1: LA TARJETA DEL GRID (VERSIÓN FINAL LIMPIA) ---
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, setSelectedId }) => {
+  // Estado visual para saber si mostrar el video o la imagen
+  const [isVideoVisible, setIsVideoVisible] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleMouseEnter = () => {
+    // 1. Efecto Visual: Ocultamos imagen
+    setIsVideoVisible(true);
+
+    // 2. Efecto Funcional: Play
     const video = videoRef.current;
-    if (project.video && video) {
-      // Intentamos reproducir
-      const playPromise = video.play();
-      
-      // Manejamos la promesa para evitar errores de interrupción
-      if (playPromise !== undefined) {
-        playPromise.catch((error) => {
-          // Este error es normal si el usuario pasa el ratón muy rápido.
-          // Lo ignoramos silenciosamente para no ensuciar la consola.
-        });
-      }
+    if (video && project.video) {
+      // Intentamos reproducir y si falla (porque sales rápido), no decimos nada.
+      video.play().catch(() => {}); 
     }
   };
 
   const handleMouseLeave = () => {
+    // 1. Efecto Visual: Mostramos imagen
+    setIsVideoVisible(false);
+
+    // 2. Efecto Funcional: Stop y Bobinar
     const video = videoRef.current;
-    if (project.video && video) {
+    if (video && project.video) {
       video.pause();
-      video.currentTime = 0; // Reseteamos el video al salir para la próxima vez
+      video.currentTime = 0; // Reiniciar al principio
     }
   };
 
-  // Variantes para controlar el Zoom
   const imageVariants = {
     rest: { scale: 1 },
     hover: { 
-      scale: project.video ? 1 : 1.05,
+      scale: isVideoVisible ? 1 : 1.05,
       transition: { duration: 0.5, ease: "easeOut" }
     }
   };
@@ -63,16 +71,16 @@ const ProjectCard = ({ project, setSelectedId }: { project: any, setSelectedId: 
         layoutId={`card-image-container-${project.id}`}
         className="aspect-[4/3] overflow-hidden relative bg-neutral-900"
       >
+        {/* IMAGEN: Se desvanece si el video se activa */}
         <motion.img 
           layoutId={`card-image-${project.id}`}
           variants={imageVariants}
           src={project.image} 
           alt={project.title} 
           className={`w-full h-full object-cover object-top absolute inset-0 z-10 transition-opacity duration-500
-            ${project.video 
-                ? "grayscale group-hover:opacity-0" 
-                : "grayscale group-hover:grayscale-0"
-            }`} 
+            ${(isVideoVisible && project.video) ? 'opacity-0' : 'opacity-100'} 
+            grayscale group-hover:grayscale-0
+          `} 
         />
 
         {project.video && (
@@ -82,8 +90,8 @@ const ProjectCard = ({ project, setSelectedId }: { project: any, setSelectedId: 
             loop
             muted
             playsInline
-            preload="auto" // CAMBIO IMPORTANTE: Carga agresiva para respuesta rápida
-            className="w-full h-full object-cover object-top absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            preload="auto"
+            className="w-full h-full object-cover object-top absolute inset-0 z-0 opacity-100"
           />
         )}
       </motion.div>
@@ -120,8 +128,14 @@ const ProjectCard = ({ project, setSelectedId }: { project: any, setSelectedId: 
   );
 };
 
+// 2. Definimos la interfaz para el Modal
+interface ModalContentProps {
+  selectedProject: Project;
+  setSelectedId: (id: number | null) => void;
+}
+
 // --- COMPONENTE 2: EL CONTENIDO DEL MODAL ---
-const ModalContent = ({ selectedProject, setSelectedId }: { selectedProject: any, setSelectedId: (id: null) => void }) => {
+const ModalContent: React.FC<ModalContentProps> = ({ selectedProject, setSelectedId }) => {
   const [hasPlayedOnce, setHasPlayedOnce] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -134,7 +148,7 @@ const ModalContent = ({ selectedProject, setSelectedId }: { selectedProject: any
     if (hasPlayedOnce && video) {
       const playPromise = video.play();
       if (playPromise !== undefined) {
-         playPromise.catch(() => {}); // Ignorar errores de interrupción
+         playPromise.catch(() => {});
       }
     }
   };
@@ -213,7 +227,7 @@ const ModalContent = ({ selectedProject, setSelectedId }: { selectedProject: any
                 <div>
                   <h4 className="font-mono text-xs text-neutral-500 uppercase tracking-widest mb-4">Stack Tecnológico</h4>
                   <div className="flex flex-wrap gap-2">
-                    {selectedProject.tech.map((tech: string) => (
+                    {selectedProject.tech.map((tech) => (
                       <span key={tech} className="px-3 py-1.5 bg-neutral-900 border border-white/10 rounded-md text-sm text-neutral-300 font-mono">{tech}</span>
                     ))}
                   </div>
