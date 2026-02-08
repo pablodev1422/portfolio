@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Copy, Check } from 'lucide-react';
+import { Send, Copy, Check, Github } from 'lucide-react'; // AÑADIDO Github
 
 export const Contact: React.FC = () => {
   const [formState, setFormState] = useState<'idle' | 'sending' | 'success'>('idle');
@@ -16,7 +16,6 @@ export const Contact: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormState('sending');
-    // Simulación de envío
     setTimeout(() => {
       setFormState('success');
     }, 1500);
@@ -55,9 +54,14 @@ export const Contact: React.FC = () => {
                
                <div>
                  <span className="font-mono text-xs text-neutral-600 uppercase tracking-widest mb-1 block">Social</span>
-                 <a href="https://www.linkedin.com/in/pablo-gonzalez-perez" target="_blank" rel="noreferrer" className="text-xl md:text-2xl text-white font-sans hover:text-neutral-300 transition-colors border-b border-transparent hover:border-white inline-block">
-                    LinkedIn Profile ↗
-                 </a>
+                 <div className="flex flex-col gap-2">
+                   <a href="https://github.com/pablodev1422" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-xl md:text-2xl text-white font-sans hover:text-neutral-300 transition-colors w-fit">
+                      <Github size={24} /> GitHub ↗
+                   </a>
+                   <a href="https://www.linkedin.com/in/pablo-gonzalez-perez" target="_blank" rel="noreferrer" className="text-xl md:text-2xl text-white font-sans hover:text-neutral-300 transition-colors w-fit">
+                      LinkedIn Profile ↗
+                   </a>
+                 </div>
                </div>
             </div>
           </motion.div>

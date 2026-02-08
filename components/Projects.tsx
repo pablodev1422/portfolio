@@ -1,22 +1,42 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { projects } from '../projectsData'; // Asegúrate de que esta ruta sea correcta
+import { projects } from '../projectsData'; 
 import { X, ExternalLink, ArrowUpRight } from 'lucide-react';
 
-// --- COMPONENTE 1: LA TARJETA DEL GRID ---
+// --- COMPONENTE 1: LA TARJETA DEL GRID (FIXED) ---
 const ProjectCard = ({ project, setSelectedId }: { project: any, setSelectedId: (id: number) => void }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleMouseEnter = () => {
-    if (project.video && videoRef.current) { // Solo intentamos reproducir si hay video
-      videoRef.current.currentTime = 0;
-      videoRef.current.play();
+    const video = videoRef.current;
+    if (project.video && video) {
+      // Intentamos reproducir
+      const playPromise = video.play();
+      
+      // Manejamos la promesa para evitar errores de interrupción
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          // Este error es normal si el usuario pasa el ratón muy rápido.
+          // Lo ignoramos silenciosamente para no ensuciar la consola.
+        });
+      }
     }
   };
 
   const handleMouseLeave = () => {
-    if (project.video && videoRef.current) {
-      videoRef.current.pause();
+    const video = videoRef.current;
+    if (project.video && video) {
+      video.pause();
+      video.currentTime = 0; // Reseteamos el video al salir para la próxima vez
+    }
+  };
+
+  // Variantes para controlar el Zoom
+  const imageVariants = {
+    rest: { scale: 1 },
+    hover: { 
+      scale: project.video ? 1 : 1.05,
+      transition: { duration: 0.5, ease: "easeOut" }
     }
   };
 
@@ -26,9 +46,9 @@ const ProjectCard = ({ project, setSelectedId }: { project: any, setSelectedId: 
       onClick={() => setSelectedId(project.id)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      whileHover="hover"
+      initial="rest"
       className="group cursor-pointer relative bg-[#0a0a0a] border border-white/5 hover:border-white/20 transition-colors overflow-hidden rounded-sm"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
     >
       {/* Barra de navegador decorativa */}
@@ -43,19 +63,18 @@ const ProjectCard = ({ project, setSelectedId }: { project: any, setSelectedId: 
         layoutId={`card-image-container-${project.id}`}
         className="aspect-[4/3] overflow-hidden relative bg-neutral-900"
       >
-        {/* LÓGICA CONDICIONAL AQUÍ */}
         <motion.img 
           layoutId={`card-image-${project.id}`}
+          variants={imageVariants}
           src={project.image} 
           alt={project.title} 
-          className={`w-full h-full object-cover object-top transition-all duration-700 ease-out absolute inset-0 z-10
+          className={`w-full h-full object-cover object-top absolute inset-0 z-10 transition-opacity duration-500
             ${project.video 
-                ? "grayscale group-hover:opacity-0" // Si hay video: Adios imagen
-                : "grayscale group-hover:grayscale-0 group-hover:scale-105" // Si NO hay video: Color + Zoom
+                ? "grayscale group-hover:opacity-0" 
+                : "grayscale group-hover:grayscale-0"
             }`} 
         />
 
-        {/* El video solo se renderiza si existe en el JSON */}
         {project.video && (
           <video
             ref={videoRef}
@@ -63,6 +82,7 @@ const ProjectCard = ({ project, setSelectedId }: { project: any, setSelectedId: 
             loop
             muted
             playsInline
+            preload="auto" // CAMBIO IMPORTANTE: Carga agresiva para respuesta rápida
             className="w-full h-full object-cover object-top absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
           />
         )}
@@ -105,18 +125,17 @@ const ModalContent = ({ selectedProject, setSelectedId }: { selectedProject: any
   const [hasPlayedOnce, setHasPlayedOnce] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Lógica: 
-  // 1. Al inicio (!hasPlayedOnce), el video se ve (opacity 1) y hace autoplay.
-  // 2. Al terminar (onEnded), hasPlayedOnce = true, el video se oculta (opacity 0).
-  // 3. Si hasPlayedOnce es true, usamos hover para mostrarlo (group-hover:opacity-100).
-
   const handleVideoEnd = () => {
     setHasPlayedOnce(true);
   };
 
   const handleMouseEnter = () => {
-    if (hasPlayedOnce && videoRef.current) {
-      videoRef.current.play();
+    const video = videoRef.current;
+    if (hasPlayedOnce && video) {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+         playPromise.catch(() => {}); // Ignorar errores de interrupción
+      }
     }
   };
 
@@ -139,29 +158,25 @@ const ModalContent = ({ selectedProject, setSelectedId }: { selectedProject: any
         <X size={24} />
       </button>
 
-      {/* HEADER MULTIMEDIA DEL MODAL */}
       <motion.div 
           layoutId={`card-image-container-${selectedProject.id}`}
           className="relative h-64 md:h-96 w-full shrink-0 bg-neutral-900 group cursor-pointer"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
       >
-          {/* IMAGEN DE FONDO (Siempre está ahí) */}
           <motion.img 
             layoutId={`card-image-${selectedProject.id}`}
             src={selectedProject.image} 
             className="w-full h-full object-cover object-top grayscale-0"
           />
 
-          {/* VIDEO OVERLAY */}
           {selectedProject.video && (
             <video
               ref={videoRef}
               src={selectedProject.video}
-              autoPlay={true} // Autoplay inicial
+              autoPlay={true}
               muted
               playsInline
-              // Si no ha terminado la primera vez, loop = false. Si ya terminó y es hover, loop = true
               loop={hasPlayedOnce} 
               onEnded={handleVideoEnd}
               className={`w-full h-full object-cover object-top absolute inset-0 z-10 transition-opacity duration-700 ${
@@ -173,7 +188,6 @@ const ModalContent = ({ selectedProject, setSelectedId }: { selectedProject: any
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent pointer-events-none z-20" />
       </motion.div>
 
-      {/* CONTENIDO TEXTO MODAL */}
       <div className="flex-1 overflow-y-auto p-8 md:p-12">
           <div className="flex flex-col md:flex-row gap-8 justify-between items-start mb-10 border-b border-white/5 pb-8">
             <div>
@@ -243,14 +257,12 @@ export const Projects: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {projects.map((project) => (
             <ProjectCard key={project.id} project={project} setSelectedId={setSelectedId} />
           ))}
         </div>
 
-        {/* Full Screen Modal */}
         <AnimatePresence>
           {selectedId && selectedProject && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-4">

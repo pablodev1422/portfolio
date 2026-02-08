@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Github, Linkedin, Mail } from 'lucide-react';
+import { Github, Linkedin, Mail } from 'lucide-react'; // AÑADIDO Github
 
 export const Hero: React.FC = () => {
   const { scrollY } = useScroll();
@@ -9,7 +9,6 @@ export const Hero: React.FC = () => {
 
   return (
     <section className="relative h-screen w-full flex flex-col justify-center items-center overflow-hidden bg-[#050505] selection:bg-white selection:text-black">
-      {/* Background Ambience */}
       <motion.div 
         className="absolute top-[-10%] right-[-5%] w-[50vw] h-[50vw] rounded-full bg-neutral-900/20 blur-[100px]"
         animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
@@ -18,7 +17,6 @@ export const Hero: React.FC = () => {
 
       <div className="z-10 flex flex-col items-center w-full max-w-5xl px-6">
         
-        {/* Photo Placeholder */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -26,7 +24,6 @@ export const Hero: React.FC = () => {
           className="relative w-32 h-32 md:w-40 md:h-40 mb-10"
         >
           <div className="w-full h-full rounded-full overflow-hidden border border-white/10 bg-neutral-900 relative z-10">
-             {/* Replace with your actual photo */}
              <div className="w-full h-full bg-neutral-800 flex items-center justify-center text-neutral-600 font-mono text-xs">
                 FOTO.JPG
              </div>
@@ -66,13 +63,16 @@ export const Hero: React.FC = () => {
             Especialista en lógica de negocio y ecosistemas escalables.
           </motion.p>
 
-          {/* Social Links */}
+          {/* Social Links Updated */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.8 }}
             className="flex gap-6 justify-center mt-10"
           >
+            <a href="https://github.com/pablodev1422" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full border border-white/10 text-neutral-400 hover:text-white hover:border-white/30 transition-all hover:scale-105">
+              <Github size={20} />
+            </a>
             <a href="https://www.linkedin.com/in/pablo-gonzalez-perez" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full border border-white/10 text-neutral-400 hover:text-white hover:border-white/30 transition-all hover:scale-105">
               <Linkedin size={20} />
             </a>
