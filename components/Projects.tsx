@@ -10,37 +10,36 @@ interface ProjectCardProps {
   setSelectedId: (id: number | null) => void;
 }
 
-// --- COMPONENTE 1: LA TARJETA DEL GRID (VERSIÓN ROBUSTA USEEFFECT) ---
+// --- COMPONENTE 1: LA TARJETA DEL GRID (FIXED HOVER) ---
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, setSelectedId }) => {
-  // Usamos un solo estado para controlar todo. Es la fuente de la verdad.
   const [isHovered, setIsHovered] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Este useEffect es el "cerebro" que sincroniza el estado del hover con el video.
-  // Es la forma más estándar y segura en React de manejar esto.
+  // CONTROL DEL VIDEO MEDIANTE EFECTO (MÁS ESTABLE)
   useEffect(() => {
     const video = videoRef.current;
-    // Si no hay video (ej. el proyecto de DAM) o el elemento no está listo, no hacemos nada.
+    
+    // Si no hay video, salimos
     if (!video || !project.video) return;
 
     if (isHovered) {
-      // ENTRAR: Intentamos reproducir
-      video.currentTime = 0; // Aseguramos que empiece desde el principio
+      // 1. Forzamos mute por código (Crucial para que el navegador permita autoplay)
+      video.muted = true;
+      // 2. Reiniciamos tiempo
+      video.currentTime = 0;
+      // 3. Reproducimos con manejo de errores silencioso
       const playPromise = video.play();
-      
-      // Gestión de errores de promesas de video (vital para evitar cuelgues)
       if (playPromise !== undefined) {
         playPromise.catch(() => {
-          // Si el navegador bloquea el autoplay o se interrumpe, lo ignoramos silenciosamente.
-          // Esto evita errores en consola y comportamientos raros.
+          // Si falla (ej. movimiento muy rápido), no hacemos nada
         });
       }
     } else {
-      // SALIR: Pausamos y rebobinamos
+      // PAUSA AL SALIR
       video.pause();
       video.currentTime = 0;
     }
-  }, [isHovered, project.video]); // Se ejecuta cada vez que isHovered cambia
+  }, [isHovered, project.video]);
 
   const imageVariants = {
     rest: { scale: 1 },
@@ -50,14 +49,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, setSelectedId }) => 
     }
   };
 
-  // Lógica de visualización: Mostramos el vídeo solo si hay hover Y el proyecto tiene vídeo.
-  const showVideo = isHovered && project.video;
-
   return (
     <motion.div
       layoutId={`card-container-${project.id}`}
       onClick={() => setSelectedId(project.id)}
-      // Los eventos solo cambian el estado. Simple.
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       whileHover="hover"
@@ -77,14 +72,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, setSelectedId }) => 
         layoutId={`card-image-container-${project.id}`}
         className="aspect-[4/3] overflow-hidden relative bg-neutral-900"
       >
-        {/* IMAGEN: Se oculta basándose en la variable showVideo */}
+        {/* IMAGEN: Se oculta si isHovered es true y hay video */}
         <motion.img 
           layoutId={`card-image-${project.id}`}
           variants={imageVariants}
           src={project.image} 
           alt={project.title} 
           className={`w-full h-full object-cover object-top absolute inset-0 z-10 transition-opacity duration-500
-            ${showVideo ? 'opacity-0' : 'opacity-100'} 
+            ${(isHovered && project.video) ? 'opacity-0' : 'opacity-100'} 
             grayscale group-hover:grayscale-0
           `} 
         />
@@ -94,10 +89,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, setSelectedId }) => 
             ref={videoRef}
             src={project.video}
             loop
-            muted
+            muted // Importante mantenerlo aquí también
             playsInline
             preload="auto"
-            // El video siempre está "visible" en el DOM, la imagen z-10 es la que lo tapa o destapa.
             className="w-full h-full object-cover object-top absolute inset-0 z-0 opacity-100"
           />
         )}
@@ -152,6 +146,7 @@ const ModalContent: React.FC<ModalContentProps> = ({ selectedProject, setSelecte
   return (
     <motion.div
       layoutId={`card-container-${selectedProject.id}`}
+      // Modal más ancho y alto
       className="w-full max-w-6xl h-full md:h-auto md:max-h-[95vh] bg-[#0a0a0a] border border-white/10 overflow-hidden relative flex flex-col md:rounded-lg shadow-2xl"
     >
       <button 
@@ -161,7 +156,7 @@ const ModalContent: React.FC<ModalContentProps> = ({ selectedProject, setSelecte
         <X size={24} />
       </button>
 
-      {/* HEADER MULTIMEDIA (Aspect Video 16:9) */}
+      {/* HEADER MULTIMEDIA (16:9) */}
       <motion.div 
           layoutId={`card-image-container-${selectedProject.id}`}
           className="relative w-full aspect-video shrink-0 bg-neutral-900 overflow-hidden"
@@ -187,8 +182,7 @@ const ModalContent: React.FC<ModalContentProps> = ({ selectedProject, setSelecte
             />
           )}
           
-          {/* --- CORRECCIÓN DEL DIFUMINADO --- */}
-          {/* Hemos cambiado 'from-[#0a0a0a]' por 'from-black/60' para que sea semitransparente */}
+          {/* Difuminado suave */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none z-20" />
       </motion.div>
 
@@ -235,6 +229,7 @@ export const Projects: React.FC = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const selectedProject = projects.find(p => p.id === selectedId);
 
+  // EFECTO 1: Bloquear scroll al abrir modal
   useEffect(() => {
     if (selectedId) {
       document.body.style.overflow = 'hidden';
@@ -242,6 +237,23 @@ export const Projects: React.FC = () => {
       document.body.style.overflow = 'unset';
     }
     return () => { document.body.style.overflow = 'unset'; };
+  }, [selectedId]);
+
+  // EFECTO 2: Cerrar con tecla ESC (NUEVO)
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setSelectedId(null);
+      }
+    };
+
+    if (selectedId) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [selectedId]);
 
   return (
