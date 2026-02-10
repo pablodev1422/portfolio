@@ -21,7 +21,7 @@ export const projects: Project[] = [
     shortDescription: "Profundizando en la 'Caja Negra'.",
     description: "Tras la experiencia práctica, decidí formalizar mis conocimientos en el Grado DAM. Aquí descubrí mi verdadera pasión: resolver problemas complejos. No solo toqué mil tecnologías, sino que aprendí a aprender. Mi enfoque cambió de 'hacer que funcione' a 'arquitecturar soluciones eficientes'.",
     link: null,
-    image: "/images/proyecto-regalo-grabado.png",
+    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
   },
   {
     id: 3,

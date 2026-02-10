@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { projects } from '../projectsData'; 
 import { Project } from '../types'; 
-import { X, ExternalLink, ArrowUpRight } from 'lucide-react';
+import { X, ExternalLink } from 'lucide-react';
 
 // Interfaz para las props
 interface ProjectCardProps {
@@ -10,50 +10,56 @@ interface ProjectCardProps {
   setSelectedId: (id: number | null) => void;
 }
 
-// --- COMPONENTE 1: LA TARJETA DEL GRID (VERSIÓN FINAL LIMPIA) ---
+// --- COMPONENTE 1: LA TARJETA DEL GRID (VERSIÓN ROBUSTA USEEFFECT) ---
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, setSelectedId }) => {
-  // Estado visual para saber si mostrar el video o la imagen
-  const [isVideoVisible, setIsVideoVisible] = useState(false);
+  // Usamos un solo estado para controlar todo. Es la fuente de la verdad.
+  const [isHovered, setIsHovered] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const handleMouseEnter = () => {
-    // 1. Efecto Visual: Ocultamos imagen
-    setIsVideoVisible(true);
-
-    // 2. Efecto Funcional: Play
+  // Este useEffect es el "cerebro" que sincroniza el estado del hover con el video.
+  // Es la forma más estándar y segura en React de manejar esto.
+  useEffect(() => {
     const video = videoRef.current;
-    if (video && project.video) {
-      // Intentamos reproducir y si falla (porque sales rápido), no decimos nada.
-      video.play().catch(() => {}); 
-    }
-  };
+    // Si no hay video (ej. el proyecto de DAM) o el elemento no está listo, no hacemos nada.
+    if (!video || !project.video) return;
 
-  const handleMouseLeave = () => {
-    // 1. Efecto Visual: Mostramos imagen
-    setIsVideoVisible(false);
-
-    // 2. Efecto Funcional: Stop y Bobinar
-    const video = videoRef.current;
-    if (video && project.video) {
+    if (isHovered) {
+      // ENTRAR: Intentamos reproducir
+      video.currentTime = 0; // Aseguramos que empiece desde el principio
+      const playPromise = video.play();
+      
+      // Gestión de errores de promesas de video (vital para evitar cuelgues)
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Si el navegador bloquea el autoplay o se interrumpe, lo ignoramos silenciosamente.
+          // Esto evita errores en consola y comportamientos raros.
+        });
+      }
+    } else {
+      // SALIR: Pausamos y rebobinamos
       video.pause();
-      video.currentTime = 0; // Reiniciar al principio
+      video.currentTime = 0;
     }
-  };
+  }, [isHovered, project.video]); // Se ejecuta cada vez que isHovered cambia
 
   const imageVariants = {
     rest: { scale: 1 },
     hover: { 
-      scale: isVideoVisible ? 1 : 1.05,
+      scale: project.video ? 1 : 1.05,
       transition: { duration: 0.5, ease: "easeOut" }
     }
   };
+
+  // Lógica de visualización: Mostramos el vídeo solo si hay hover Y el proyecto tiene vídeo.
+  const showVideo = isHovered && project.video;
 
   return (
     <motion.div
       layoutId={`card-container-${project.id}`}
       onClick={() => setSelectedId(project.id)}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      // Los eventos solo cambian el estado. Simple.
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       whileHover="hover"
       initial="rest"
       className="group cursor-pointer relative bg-[#0a0a0a] border border-white/5 hover:border-white/20 transition-colors overflow-hidden rounded-sm"
@@ -71,14 +77,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, setSelectedId }) => 
         layoutId={`card-image-container-${project.id}`}
         className="aspect-[4/3] overflow-hidden relative bg-neutral-900"
       >
-        {/* IMAGEN: Se desvanece si el video se activa */}
+        {/* IMAGEN: Se oculta basándose en la variable showVideo */}
         <motion.img 
           layoutId={`card-image-${project.id}`}
           variants={imageVariants}
           src={project.image} 
           alt={project.title} 
           className={`w-full h-full object-cover object-top absolute inset-0 z-10 transition-opacity duration-500
-            ${(isVideoVisible && project.video) ? 'opacity-0' : 'opacity-100'} 
+            ${showVideo ? 'opacity-0' : 'opacity-100'} 
             grayscale group-hover:grayscale-0
           `} 
         />
@@ -91,6 +97,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, setSelectedId }) => 
             muted
             playsInline
             preload="auto"
+            // El video siempre está "visible" en el DOM, la imagen z-10 es la que lo tapa o destapa.
             className="w-full h-full object-cover object-top absolute inset-0 z-0 opacity-100"
           />
         )}
@@ -98,14 +105,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, setSelectedId }) => 
       
       {/* Contenido Texto */}
       <div className="p-6 relative z-20 bg-[#0a0a0a]">
-         <div className="flex justify-between items-start mb-3">
+         <div className="mb-3">
             <motion.h3 
               layoutId={`card-title-${project.id}`}
               className="text-xl font-sans font-medium text-white group-hover:text-neutral-200"
             >
               {project.title}
             </motion.h3>
-            <ArrowUpRight size={18} className="text-neutral-600 group-hover:text-white transition-colors" />
          </div>
          <motion.p 
             layoutId={`card-short-${project.id}`}
@@ -143,40 +149,22 @@ const ModalContent: React.FC<ModalContentProps> = ({ selectedProject, setSelecte
     setHasPlayedOnce(true);
   };
 
-  const handleMouseEnter = () => {
-    const video = videoRef.current;
-    if (hasPlayedOnce && video) {
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-         playPromise.catch(() => {});
-      }
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (hasPlayedOnce && videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
-    }
-  };
-
   return (
     <motion.div
       layoutId={`card-container-${selectedProject.id}`}
-      className="w-full max-w-5xl h-full md:h-auto md:max-h-[90vh] bg-[#0a0a0a] border border-white/10 overflow-hidden relative flex flex-col md:rounded-lg shadow-2xl"
+      className="w-full max-w-6xl h-full md:h-auto md:max-h-[95vh] bg-[#0a0a0a] border border-white/10 overflow-hidden relative flex flex-col md:rounded-lg shadow-2xl"
     >
       <button 
         onClick={(e) => { e.stopPropagation(); setSelectedId(null); }}
-        className="absolute top-4 right-4 z-20 p-2 bg-black/50 backdrop-blur-md rounded-full text-white border border-white/10 hover:bg-white hover:text-black transition-all"
+        className="absolute top-4 right-4 z-50 p-2 bg-black/50 backdrop-blur-md rounded-full text-white border border-white/10 hover:bg-white hover:text-black transition-all"
       >
         <X size={24} />
       </button>
 
+      {/* HEADER MULTIMEDIA (Aspect Video 16:9) */}
       <motion.div 
           layoutId={`card-image-container-${selectedProject.id}`}
-          className="relative h-64 md:h-96 w-full shrink-0 bg-neutral-900 group cursor-pointer"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+          className="relative w-full aspect-video shrink-0 bg-neutral-900 overflow-hidden"
       >
           <motion.img 
             layoutId={`card-image-${selectedProject.id}`}
@@ -188,20 +176,23 @@ const ModalContent: React.FC<ModalContentProps> = ({ selectedProject, setSelecte
             <video
               ref={videoRef}
               src={selectedProject.video}
-              autoPlay={true}
+              autoPlay
               muted
               playsInline
               loop={hasPlayedOnce} 
               onEnded={handleVideoEnd}
               className={`w-full h-full object-cover object-top absolute inset-0 z-10 transition-opacity duration-700 ${
-                hasPlayedOnce ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
+                hasPlayedOnce ? 'opacity-0 hover:opacity-100' : 'opacity-100'
               }`}
             />
           )}
           
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent pointer-events-none z-20" />
+          {/* --- CORRECCIÓN DEL DIFUMINADO --- */}
+          {/* Hemos cambiado 'from-[#0a0a0a]' por 'from-black/60' para que sea semitransparente */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none z-20" />
       </motion.div>
 
+      {/* CONTENIDO TEXTO */}
       <div className="flex-1 overflow-y-auto p-8 md:p-12">
           <div className="flex flex-col md:flex-row gap-8 justify-between items-start mb-10 border-b border-white/5 pb-8">
             <div>
