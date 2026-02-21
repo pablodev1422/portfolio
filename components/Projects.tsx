@@ -7,11 +7,12 @@ import { X, ExternalLink } from 'lucide-react';
 // Interfaz para las props
 interface ProjectCardProps {
   project: Project;
+  selectedId: number | null;
   setSelectedId: (id: number | null) => void;
 }
 
 // --- COMPONENTE 1: LA TARJETA DEL GRID (FIXED HOVER) ---
-const ProjectCard: React.FC<ProjectCardProps> = ({ project, setSelectedId }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, selectedId, setSelectedId }) => {
   const [isHovered, setIsHovered] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -43,22 +44,25 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, setSelectedId }) => 
 
   return (
     <motion.div
-      layoutId={`card-container-${project.id}`}
       onClick={() => setSelectedId(project.id)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       whileHover="hover"
       initial="rest"
+      style={{ zIndex: selectedId === project.id ? 50 : (isHovered ? 40 : 'auto') }}
       className="group cursor-pointer relative rounded-lg transition-all duration-500 transform-gpu bg-[#0a0a0a]"
       viewport={{ once: true, margin: "-50px" }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
-      {/* --- PREMIUM MINIMALIST BORDER & SHADOW (Vercel Style) --- */}
+      {/* --- PREMIUM MINIMALIST BACKGROUND GLOW & BORDER --- */}
+      {/* Soft Elegant Ambient Glow */}
+      <div className="absolute -inset-4 rounded-xl bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 blur-2xl transition-all duration-700 pointer-events-none z-0"></div>
+
       {/* Borde estático sutil */}
-      <div className="absolute inset-0 rounded-lg border border-white/[0.04] group-hover:border-white/[0.08] transition-colors duration-500 pointer-events-none z-30"></div>
+      <div className="absolute inset-0 rounded-lg border border-white/[0.04] group-hover:border-white/[0.1] transition-colors duration-500 pointer-events-none z-30"></div>
 
       {/* Sombra de hover monocromática elegante */}
-      <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-20 shadow-[0_8px_30px_rgb(255,255,255,0.04)]"></div>
+      <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-20 shadow-[0_8px_30px_rgb(255,255,255,0.06)]"></div>
 
       {/* --- CONTENIDO PRINCIPAL --- */}
       <div className="relative z-10 flex flex-col h-full rounded-lg overflow-hidden bg-[#0a0a0a]">
@@ -72,13 +76,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, setSelectedId }) => 
 
         {/* Contenedor Multimedia */}
         <motion.div
-          layoutId={`card-image-container-${project.id}`}
           className="aspect-[4/3] overflow-hidden relative bg-neutral-900"
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
           {/* IMAGEN: Se oculta suavemente si hay video y estamos hover */}
           <motion.img
-            layoutId={`card-image-${project.id}`}
             variants={imageVariants}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             src={project.image}
@@ -106,7 +108,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, setSelectedId }) => 
         <div className="p-6 relative z-20 bg-[#0a0a0a] flex-1">
           <div className="mb-3">
             <motion.h3
-              layoutId={`card-title-${project.id}`}
               className="text-xl font-sans font-medium text-white group-hover:text-neutral-200 transition-colors duration-500"
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
@@ -114,7 +115,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, setSelectedId }) => 
             </motion.h3>
           </div>
           <motion.p
-            layoutId={`card-short-${project.id}`}
             className="text-sm text-neutral-500 font-light line-clamp-2"
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
@@ -153,10 +153,11 @@ const ModalContent: React.FC<ModalContentProps> = ({ selectedProject, setSelecte
 
   return (
     <motion.div
-      layoutId={`card-container-${selectedProject.id}`}
-      // Modal más ancho y alto
-      className="w-full max-w-6xl h-full md:h-auto md:max-h-[95vh] bg-[#0a0a0a] border border-white/10 overflow-hidden relative flex flex-col md:rounded-lg shadow-2xl"
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      initial={{ opacity: 0, scale: 0.95, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95, y: 20 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="w-full max-w-5xl h-[95vh] md:h-auto md:max-h-[90vh] bg-black/80 backdrop-blur-xl border border-white/10 overflow-hidden relative flex flex-col rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.3)] mx-4"
     >
       <button
         onClick={(e) => { e.stopPropagation(); setSelectedId(null); }}
@@ -166,16 +167,11 @@ const ModalContent: React.FC<ModalContentProps> = ({ selectedProject, setSelecte
       </button>
 
       {/* HEADER MULTIMEDIA (16:9) */}
-      <motion.div
-        layoutId={`card-image-container-${selectedProject.id}`}
-        className="relative w-full aspect-video shrink-0 bg-neutral-900 overflow-hidden"
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      >
-        <motion.img
-          layoutId={`card-image-${selectedProject.id}`}
+      <div className="relative w-full aspect-video shrink-0 bg-neutral-900 overflow-hidden rounded-t-2xl">
+        <img
           src={selectedProject.image}
           className="w-full h-full object-cover object-top grayscale-0"
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          alt={selectedProject.title}
         />
 
         {selectedProject.video && (
@@ -185,37 +181,38 @@ const ModalContent: React.FC<ModalContentProps> = ({ selectedProject, setSelecte
             autoPlay
             muted
             playsInline
-            loop={hasPlayedOnce}
-            onEnded={handleVideoEnd}
-            className={`w-full h-full object-cover object-top absolute inset-0 z-10 transition-opacity duration-700 ${hasPlayedOnce ? 'opacity-0 hover:opacity-100' : 'opacity-100'
-              }`}
+            loop
+            className={"w-full h-full object-cover absolute inset-0 z-20 transition-opacity duration-1000 opacity-100"}
           />
         )}
 
-        {/* Difuminado suave */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none z-20" />
-      </motion.div>
+      </div>
 
       {/* CONTENIDO TEXTO */}
       <div className="flex-1 overflow-y-auto p-8 md:p-12">
         <div className="flex flex-col md:flex-row gap-8 justify-between items-start mb-10 border-b border-white/5 pb-8">
           <div>
-            <motion.h2 layoutId={`card-title-${selectedProject.id}`} transition={{ type: "spring", stiffness: 300, damping: 30 }} className="text-3xl md:text-5xl font-sans font-semibold text-white mb-2">
+            <h2 className="text-3xl md:text-5xl font-sans font-semibold text-white mb-2">
               {selectedProject.title}
-            </motion.h2>
-            <motion.p layoutId={`card-short-${selectedProject.id}`} transition={{ type: "spring", stiffness: 300, damping: 30 }} className="text-lg text-neutral-400 font-light">
+            </h2>
+            <p className="text-lg text-neutral-400 font-light">
               {selectedProject.shortDescription}
-            </motion.p>
+            </p>
           </div>
-          {selectedProject.link && (
-            <motion.a
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.4 }}
-              href={selectedProject.link} target="_blank" rel="noreferrer" className="shrink-0 flex items-center gap-3 px-6 py-3 bg-white text-black text-sm font-medium rounded-sm hover:bg-neutral-200 transition-colors">
-              Ver Proyecto <ExternalLink size={16} />
-            </motion.a>
-          )}
+          <div className="shrink-0 flex flex-col sm:flex-row items-center gap-3">
+            {selectedProject.link && (
+              <a
+                href={selectedProject.link} target="_blank" rel="noreferrer" className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-3 bg-white text-black text-sm font-medium rounded-xl hover:bg-neutral-200 transition-colors">
+                Ver Proyecto <ExternalLink size={16} />
+              </a>
+            )}
+            {selectedProject.video && (
+              <a
+                href={selectedProject.video} target="_blank" rel="noreferrer" className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-3 bg-[#1a1a1a] text-white border border-white/10 text-sm font-medium rounded-xl hover:bg-neutral-800 transition-colors">
+                Ver Demo
+              </a>
+            )}
+          </div>
         </div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -276,7 +273,7 @@ export const Projects: React.FC = () => {
   }, [selectedId]);
 
   return (
-    <section className="py-24 px-6 bg-[#050505]">
+    <section id="projects" className="py-24 px-6 bg-[#050505]">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -293,9 +290,9 @@ export const Projects: React.FC = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 relative z-10">
           {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} setSelectedId={setSelectedId} />
+            <ProjectCard key={project.id} project={project} selectedId={selectedId} setSelectedId={setSelectedId} />
           ))}
         </div>
 
