@@ -1,15 +1,24 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 export const About: React.FC = () => {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"]
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+
   return (
-    <section id="about" className="py-24 md:py-32 px-6 bg-[#050505] border-t border-white/5">
-      <div className="max-w-4xl mx-auto">
+    <section ref={ref} id="about" className="py-24 md:py-32 px-6 bg-[#050505] border-t border-white/5 overflow-hidden">
+      <motion.div style={{ y, opacity }} className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <span className="font-mono text-xs text-neutral-500 uppercase tracking-widest mb-4 block">Sobre mí</span>
 
@@ -37,7 +46,7 @@ export const About: React.FC = () => {
             ))}
           </div>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 };

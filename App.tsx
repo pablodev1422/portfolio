@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import ReactLenis from 'lenis/react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
@@ -19,17 +20,19 @@ function App() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <main className="bg-[#050505] min-h-screen w-full relative">
-      {/* Navigation */}
-      <Navbar />
+    <ReactLenis root options={{ lerp: 0.08, smoothWheel: true }}>
+      <main className="bg-[#050505] min-h-screen w-full relative">
+        {/* Navigation */}
+        <Navbar />
 
-      <Hero />
-      <About />
-      <Projects />
-      <Contact />
+        <Hero />
+        <About />
+        <Projects />
+        <Contact />
 
-      <Footer />
-    </main>
+        <Footer />
+      </main>
+    </ReactLenis>
   );
 }
 
