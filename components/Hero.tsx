@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Github, Linkedin, Mail } from 'lucide-react'; // AÑADIDO Github
+import { Github, Linkedin, Mail } from 'lucide-react';
 
 export const Hero: React.FC = () => {
   const { scrollY } = useScroll();
@@ -46,7 +46,7 @@ export const Hero: React.FC = () => {
               transition={{ delay: 0.3, duration: 0.8 }}
               className="block"
             >
-              Pablo González
+              Pablo González Pérez
             </motion.span>
           </h1>
 
@@ -67,7 +67,7 @@ export const Hero: React.FC = () => {
             transition={{ delay: 0.7, duration: 0.8 }}
             className="flex gap-6 justify-center mt-10"
           >
-            <a href="https://github.com/pablodev1422" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full border border-white/10 text-neutral-400 hover:text-white hover:border-white/30 transition-all hover:scale-105">
+            <a href="https://github.com/pabloperez14" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full border border-white/10 text-neutral-400 hover:text-white hover:border-white/30 transition-all hover:scale-105">
               <Github size={20} />
             </a>
             <a href="https://www.linkedin.com/in/pablo-gonzalez-perez" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full border border-white/10 text-neutral-400 hover:text-white hover:border-white/30 transition-all hover:scale-105">
