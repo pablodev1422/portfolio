@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Copy, Check, Github } from 'lucide-react'; // AÑADIDO Github
+import { Copy, Check, Github } from 'lucide-react';
+import { ContactForm } from './ContactForm';
 
 export const Contact: React.FC = () => {
-  const [formState, setFormState] = useState<'idle' | 'sending' | 'success'>('idle');
   const [copied, setCopied] = useState(false);
   const email = "pablodev1422@gmail.com";
 
@@ -11,14 +11,6 @@ export const Contact: React.FC = () => {
     navigator.clipboard.writeText(email);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormState('sending');
-    setTimeout(() => {
-      setFormState('success');
-    }, 1500);
   };
 
   return (
@@ -55,7 +47,7 @@ export const Contact: React.FC = () => {
               <div>
                 <span className="font-mono text-xs text-neutral-600 uppercase tracking-widest mb-1 block">Social</span>
                 <div className="flex flex-col gap-2">
-                  <a href="https://github.com/pablodev1422" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-xl md:text-2xl text-white font-sans hover:text-neutral-300 transition-colors w-fit">
+                  <a href="https://github.com/pabloperez14" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-xl md:text-2xl text-white font-sans hover:text-neutral-300 transition-colors w-fit">
                     <Github size={24} /> GitHub ↗
                   </a>
                   <a href="https://www.linkedin.com/in/pablo-gonzalez-perez" target="_blank" rel="noreferrer" className="text-xl md:text-2xl text-white font-sans hover:text-neutral-300 transition-colors w-fit">
@@ -68,68 +60,8 @@ export const Contact: React.FC = () => {
         </div>
 
         {/* Form Side */}
-        <div className="bg-[#0a0a0a] p-8 md:p-12 border border-white/5 rounded-sm">
-          {formState === 'success' ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="h-full flex flex-col items-center justify-center text-center py-20"
-            >
-              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-black mb-6">
-                <Check size={32} />
-              </div>
-              <h3 className="text-2xl text-white font-sans mb-2">Mensaje Enviado</h3>
-              <p className="text-neutral-500 font-light">Gracias por contactar. Te responderé lo antes posible.</p>
-              <button
-                onClick={() => setFormState('idle')}
-                className="mt-8 text-sm text-white underline underline-offset-4 hover:text-neutral-300"
-              >
-                Enviar otro mensaje
-              </button>
-            </motion.div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-8">
-              <div className="space-y-2">
-                <label className="font-mono text-xs text-neutral-500 uppercase tracking-widest">Tu Nombre</label>
-                <input
-                  required
-                  type="text"
-                  className="w-full bg-transparent border-b border-neutral-800 py-3 text-white focus:outline-none focus:border-white transition-colors font-sans text-lg placeholder-neutral-800"
-                  placeholder="John Doe"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="font-mono text-xs text-neutral-500 uppercase tracking-widest">Email</label>
-                <input
-                  required
-                  type="email"
-                  className="w-full bg-transparent border-b border-neutral-800 py-3 text-white focus:outline-none focus:border-white transition-colors font-sans text-lg placeholder-neutral-800"
-                  placeholder="john@example.com"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="font-mono text-xs text-neutral-500 uppercase tracking-widest">Mensaje</label>
-                <textarea
-                  required
-                  rows={4}
-                  className="w-full bg-transparent border-b border-neutral-800 py-3 text-white focus:outline-none focus:border-white transition-colors font-sans text-lg placeholder-neutral-800 resize-none"
-                  placeholder="Cuéntame sobre tu proyecto..."
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={formState === 'sending'}
-                className="w-full bg-white text-black font-medium py-4 mt-4 hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
-              >
-                {formState === 'sending' ? 'Enviando...' : (
-                  <>Enviar Mensaje <Send size={16} /></>
-                )}
-              </button>
-            </form>
-          )}
+        <div className="w-full md:w-auto flex-1">
+          <ContactForm />
         </div>
       </div>
     </section>
