@@ -1,17 +1,34 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { FaJava } from 'react-icons/fa';
-import { SiSpring, SiDocker, SiReact, SiMysql, SiShopify, SiMongodb, SiGit } from 'react-icons/si';
+import { SiSpring, SiDocker, SiReact, SiMysql, SiShopify, SiMongodb, SiGit, SiFirebase, SiTailwindcss } from 'react-icons/si';
 
-const skills = [
-  { name: "Java", icon: <span className="text-[#f89820] flex items-center"><FaJava size={14} /></span> },
-  { name: "Spring Boot", icon: <span className="text-[#6db33f] flex items-center"><SiSpring size={14} /></span> },
-  { name: "Docker", icon: <span className="text-[#2496ed] flex items-center"><SiDocker size={14} /></span> },
-  { name: "React", icon: <span className="text-[#61dafb] flex items-center"><SiReact size={14} /></span> },
-  { name: "SQL", icon: <span className="text-[#4479A1] flex items-center"><SiMysql size={14} /></span> },
-  { name: "Shopify API", icon: <span className="text-[#95BF47] flex items-center"><SiShopify size={14} /></span> },
-  { name: "MongoDB", icon: <span className="text-[#47A248] flex items-center"><SiMongodb size={14} /></span> },
-  { name: "Git", icon: <span className="text-[#F05032] flex items-center"><SiGit size={14} /></span> },
+const skillCategories = [
+  {
+    title: "Backend & Arquitectura",
+    items: [
+      { name: "Java", icon: <span className="text-[#f89820] flex items-center"><FaJava size={16} /></span> },
+      { name: "Spring Boot", icon: <span className="text-[#6db33f] flex items-center"><SiSpring size={16} /></span> },
+      { name: "SQL", icon: <span className="text-[#4479A1] flex items-center"><SiMysql size={16} /></span> },
+      { name: "MongoDB", icon: <span className="text-[#47A248] flex items-center"><SiMongodb size={16} /></span> },
+    ]
+  },
+  {
+    title: "Frontend & UI",
+    items: [
+      { name: "React", icon: <span className="text-[#61dafb] flex items-center"><SiReact size={16} /></span> },
+      { name: "Tailwind CSS", icon: <span className="text-[#38bdf8] flex items-center"><SiTailwindcss size={16} /></span> },
+    ]
+  },
+  {
+    title: "Tools & Cloud",
+    items: [
+      { name: "Docker", icon: <span className="text-[#2496ed] flex items-center"><SiDocker size={16} /></span> },
+      { name: "Git", icon: <span className="text-[#F05032] flex items-center"><SiGit size={16} /></span> },
+      { name: "Shopify API", icon: <span className="text-[#95BF47] flex items-center"><SiShopify size={16} /></span> },
+      { name: "Firebase", icon: <span className="text-[#FFCB2B] flex items-center"><SiFirebase size={16} /></span> },
+    ]
+  }
 ];
 
 export const About: React.FC = () => {
@@ -47,16 +64,25 @@ export const About: React.FC = () => {
               Esa curiosidad me llevó al Grado Superior (DAM), donde cambié el "hacer que funcione" por la <strong>arquitectura robusta</strong>. Me apasiona el ecosistema Java/Spring Boot para el backend, aunque no dudo en usar React para crear experiencias completas.
             </p>
             <p>
-              Soy una persona tranquila y algo tímida, pero cuando se trata de resolver un problema técnico o optimizar un proceso, me transformo. Me encanta aprender, experimentar y, sobre todo, ver cómo una buena lógica de software puede ahorrar costes y tiempo real a un negocio.
+              Soy un perfil analítico y extremadamente curioso: me encanta investigar herramientas nuevas, tocar código de todo tipo y probar ideas. Me transformo cuando hay un problema técnico complejo que resolver, porque mi objetivo final siempre es el mismo: usar la lógica del software para optimizar procesos y ahorrar costes y tiempo real a los negocios.
             </p>
           </div>
 
-          <div className="mt-12 flex flex-wrap gap-3">
-            {skills.map((skill, index) => (
-              <span key={index} className="flex items-center gap-2 px-4 py-2 bg-white/[0.03] hover:bg-white/[0.08] transition-colors border border-white/10 rounded-full text-xs font-mono text-neutral-300 backdrop-blur-sm cursor-default">
-                {skill.icon}
-                {skill.name}
-              </span>
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12">
+            {skillCategories.map((category, idx) => (
+              <div key={idx} className={idx === 2 ? "md:col-span-2 flex flex-col items-center md:px-12" : "flex flex-col"}>
+                <h4 className={`font-mono text-xs text-neutral-500 uppercase tracking-widest mb-4 border-b border-white/5 pb-2 w-full ${idx === 2 ? "text-center md:w-3/4 mx-auto" : ""}`}>
+                  {category.title}
+                </h4>
+                <div className={`flex flex-wrap gap-3 ${idx === 2 ? "justify-center" : ""}`}>
+                  {category.items.map((skill, index) => (
+                    <span key={index} className="flex items-center gap-2.5 px-5 py-2.5 bg-white/[0.03] hover:bg-white/[0.08] transition-colors border border-white/10 rounded-full text-sm font-mono text-neutral-300 backdrop-blur-sm cursor-default shadow-sm shadow-black/20">
+                      {skill.icon}
+                      {skill.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </motion.div>

@@ -19,7 +19,7 @@ export const getTechBadge = (tech: string) => {
   else if (t.includes('vite')) icon = <span className="text-[#646cff]"><SiVite size={12} /></span>;
   else if (t.includes('vercel')) icon = <span className="text-white"><SiVercel size={12} /></span>;
   else if (t.includes('amazon')) icon = <span className="text-[#FF9900]"><SiAmazon size={12} /></span>;
-  else if (t.includes('seo') || t.includes('algoritmia') || t.includes('lógica') || t.includes('resiliencia')) icon = null; // No specific brand icon
+  else if (t.includes('seo') || t.includes('algoritmia') || t.includes('lógica') || t.includes('resiliencia')) icon = null;
 
   return (
     <span key={tech} className="flex items-center gap-1.5 px-3 py-1 bg-white/[0.03] border border-white/5 rounded-full text-[10px] md:text-xs font-mono text-neutral-300">
@@ -294,7 +294,7 @@ export const Projects: React.FC = () => {
   }, [selectedId]);
 
   return (
-    <section id="projects" className="pt-40 md:pt-56 pb-24 px-6 bg-[#050505]">
+    <section id="projects" className="pt-32 md:pt-40 pb-24 px-6 bg-[#050505]">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -304,10 +304,10 @@ export const Projects: React.FC = () => {
         >
           <div>
             <span className="font-mono text-xs text-neutral-500 uppercase tracking-widest mb-2 block">Portfolio</span>
-            <h2 className="text-4xl md:text-5xl font-sans text-white font-light">Proyectos Seleccionados</h2>
+            <h2 className="text-4xl md:text-5xl font-sans text-white font-light">Proyectos Destacados</h2>
           </div>
           <p className="text-neutral-500 text-sm font-light max-w-xs text-right hidden md:block">
-            Una colección de retos técnicos y soluciones de negocio reales.
+            Mis principales retos técnicos y soluciones de negocio reales.
           </p>
         </motion.div>
 

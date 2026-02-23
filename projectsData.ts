@@ -6,7 +6,7 @@ import { Project } from './types';
 export const projects: Project[] = [
   {
     id: 1,
-    title: "Regalograbado.com",
+    title: "Regalo Grabado",
     tech: ["Shopify Liquid", "SEO", "Google Merchant", "Ads"],
     shortDescription: "El inicio (2022). Gestión 360° E-commerce.",
     description: "En 2022, mi empresa necesitaba una transformación digital. Sin conocimientos previos, dediqué semanas a investigar y experimentar. Creé una propuesta desde cero en Shopify, adaptándola para productos personalizados en directo. Gestioné SEO, Google Merchant Center, Perfil de Empresa y Ads. Un trabajo de 3 meses que resultó en un negocio funcional y rentable.",
@@ -25,7 +25,7 @@ export const projects: Project[] = [
   },
   {
     id: 3,
-    title: "Grabadolaser.eu",
+    title: "Grabado Láser",
     tech: ["React", "TypeScript", "Vite", "Vercel", "SEO Técnico"],
     shortDescription: "Rendimiento y Experiencia de Usuario.",
     description: "Desarrollo de un sitio corporativo B2B enfocado puramente en Core Web Vitals y SEO técnico. Utilicé el stack moderno de React + Vite desplegado en Vercel para garantizar una carga instantánea. Implementé estrategias de contenido mensual y formularios optimizados para conversión.",

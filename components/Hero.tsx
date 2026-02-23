@@ -60,7 +60,7 @@ export const Hero: React.FC = () => {
               className="font-sans text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed font-light"
             >
               Transformo complejidad en sistemas eficientes. <br />
-              Especialista en lógica de negocio y ecosistemas escalables.
+              Me gusta pensar soluciones robusta a problemas complejos.
             </motion.p>
 
             {/* Social Links Updated */}
