@@ -25,7 +25,7 @@ export const Hero: React.FC = () => {
           >
             <div className="w-full h-full rounded-full overflow-hidden border border-white/10 bg-neutral-900 relative z-10">
               <div className="w-full h-full bg-neutral-800 flex items-center justify-center text-neutral-600 font-mono text-xs">
-                FOTO.JPG
+                PROXIMAMENTE
               </div>
             </div>
           </motion.div>
