@@ -11,40 +11,42 @@ export const PoliticaPrivacidad: React.FC = () => {
 
             <div className="space-y-8">
                 <section>
-                    <h2 className="text-xl text-white font-medium mb-4">1. Información al usuario</h2>
+                    <h2 className="text-xl text-white font-medium mb-4">1. Quién es el responsable de tus datos</h2>
                     <p>
-                        Pablo González Pérez, como Responsable del Tratamiento, le informa que, según lo dispuesto en el Reglamento (UE) 2016/679, de 27 de abril, (RGPD) y en la L.O. 3/2018, de 5 de diciembre, de protección de datos y garantía de los derechos digitales (LOPDGDD), trataremos su datos tal y como reflejamos en la presente Política de Privacidad.
+                        En cumplimiento con el Reglamento Europeo de Protección de Datos (RGPD) y la normativa española (LOPDGDD), te informo de que yo, Pablo González Pérez, soy el responsable del tratamiento de los datos personales que se recogen en este portfolio web.
                     </p>
                 </section>
 
                 <section>
-                    <h2 className="text-xl text-white font-medium mb-4">2. Finalidad del tratamiento</h2>
+                    <h2 className="text-xl text-white font-medium mb-4">2. Qué datos recojo y para qué los uso</h2>
                     <p>
-                        Tratamos la información que nos facilita con el fin de prestarle el servicio solicitado, atender sus solicitudes a través del formulario de contacto y/o enviarle la información requerida sobre mis servicios profesionales como desarrollador.
+                        Cuando utilizas el formulario de contacto de mi web, te pido únicamente los datos estrictamente necesarios (Nombre y Email) con una sola finalidad: poder leer tu mensaje y contestarte.
+                        Tus datos se utilizarán exclusivamente para gestionar propuestas profesionales, ofertas de empleo o resolver tus dudas. Nunca te suscribiré a listas de correo (newsletters) ni te enviaré spam.
                     </p>
                 </section>
 
                 <section>
-                    <h2 className="text-xl text-white font-medium mb-4">3. Criterios de conservación de los datos</h2>
+                    <h2 className="text-xl text-white font-medium mb-4">3. Cuánto tiempo guardo tu información</h2>
                     <p>
-                        Se conservarán durante no más tiempo del necesario para mantener el fin del tratamiento o existan prescripciones legales que dictaminen su custodia y cuando ya no sea necesario para ello, se suprimirán con medidas de seguridad adecuadas para garantizar la anonimización de los datos o la destrucción total de los mismos.
+                        Conservaré tus correos y datos únicamente durante el tiempo necesario para mantener nuestra conversación profesional o cumplir con el propósito por el que me escribiste. Una vez finalizada nuestra interacción (o si me lo pides antes), eliminaré los correos de mi bandeja de entrada de forma segura.
                     </p>
                 </section>
 
                 <section>
-                    <h2 className="text-xl text-white font-medium mb-4">4. Comunicación de los datos</h2>
+                    <h2 className="text-xl text-white font-medium mb-4">4. Terceros y servicios externos</h2>
                     <p>
-                        No se comunicarán los datos a terceros, salvo obligación legal. Sin embargo, para la correcta gestión de los correos electrónicos enviados a través del formulario de contacto, se utilizan los servicios de proveedores como EmailJS, sujetos a sus propias políticas de RGPD.
+                        Quiero ser totalmente transparente con la tecnología que uso: no vendo, cedo ni comparto tus datos con terceros.
+Sin embargo, como esta web no utiliza un servidor backend propio para procesar el formulario de contacto, utilizo el servicio de EmailJS para enrutar tu mensaje hasta mi correo personal de Gmail. EmailJS actúa como encargado del tratamiento, procesa la información de forma segura y cumple con sus propias políticas estrictas de privacidad y RGPD.
                     </p>
                 </section>
 
                 <section>
-                    <h2 className="text-xl text-white font-medium mb-4">5. Derechos que asisten al Usuario</h2>
+                    <h2 className="text-xl text-white font-medium mb-4">5. Tus derechos sobre tus datos</h2>
                     <ul className="list-disc pl-5 mt-4 space-y-2 text-neutral-400">
                         <li>Derecho a retirar el consentimiento en cualquier momento.</li>
                         <li>Derecho de acceso, rectificación, portabilidad y supresión de sus datos, y de limitación u oposición a su tratamiento.</li>
-                        <li>Puede ejercer estos derechos enviando un correo a: pablodev1422@gmail.com</li>
                     </ul>
+                        <p>Para hacerlo, solo tienes que enviarme un correo electrónico a pablodev1422@gmail.com con el asunto "Protección de Datos" y lo gestionaré lo antes posible.</p>
                 </section>
             </div>
         </div>
