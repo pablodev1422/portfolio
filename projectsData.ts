@@ -18,10 +18,10 @@ export const projects: Project[] = [
     id: 2,
     title: "Grado DAM & Descubrimiento",
     tech: ["Java", "Lógica", "Bases de datos", "Git", "Docker", "Python"],
-    shortDescription: "Profundizando en este mundillo'.",
+    shortDescription: "Profundizando en este mundillo.",
     description: "Tras la experiencia práctica, decidí formalizar mis conocimientos en el Grado DAM. Aquí descubrí mi verdadera pasión: resolver problemas complejos. No solo toqué mil tecnologías, sino que aprendí a aprender. Mi enfoque cambió de 'hacer que funcione' a 'entender como funciona'.",
     link: null,
-    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    image: "/images/ciclo-desarrollo-aplicaciones-multiplataforma.jpg",
   },
   {
     id: 3,
