@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import ReactLenis from 'lenis/react';
+import { Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
@@ -8,6 +9,17 @@ import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { FilmGrain } from './components/FilmGrain';
 import { AmbientCursor } from './components/AmbientCursor';
+import { AvisoLegal } from './components/AvisoLegal';
+import { PoliticaPrivacidad } from './components/PoliticaPrivacidad';
+
+const Home = () => (
+  <>
+    <Hero />
+    <About />
+    <Projects />
+    <Contact />
+  </>
+);
 
 function App() {
 
@@ -29,10 +41,11 @@ function App() {
         {/* Navigation */}
         <Navbar />
 
-        <Hero />
-        <About />
-        <Projects />
-        <Contact />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/aviso-legal" element={<AvisoLegal />} />
+          <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
+        </Routes>
 
         <Footer />
       </main>

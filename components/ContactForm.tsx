@@ -119,6 +119,18 @@ export const ContactForm: React.FC = () => {
                         />
                     </div>
 
+                    <div className="flex items-start gap-3 pt-2">
+                        <input
+                            type="checkbox"
+                            required
+                            id="rgpd-consent"
+                            className="mt-1 w-4 h-4 rounded border-neutral-700 bg-neutral-900 accent-white cursor-pointer"
+                        />
+                        <label htmlFor="rgpd-consent" className="text-xs text-neutral-500 font-light leading-relaxed cursor-pointer">
+                            He leído y acepto la <a href="/politica-privacidad" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white underline underline-offset-4 transition-colors">Política de Privacidad</a> respecto al tratamiento de mis datos personales.
+                        </label>
+                    </div>
+
                     <button
                         type="submit"
                         disabled={formState === 'sending'}
