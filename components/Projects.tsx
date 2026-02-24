@@ -197,7 +197,7 @@ const ModalContent: React.FC<ModalContentProps> = ({ selectedProject, setSelecte
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95, y: 20 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full max-w-5xl h-[95vh] md:h-auto md:max-h-[90vh] bg-black/80 backdrop-blur-xl border border-white/10 overflow-hidden relative flex flex-col rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.3)] mx-4"
+      className="w-full max-w-4xl max-h-[95dvh] md:max-h-[90vh] bg-black/80 backdrop-blur-xl border border-white/10 overflow-hidden relative flex flex-col rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)]"
     >
       <button
         onClick={(e) => { e.stopPropagation(); setSelectedId(null); }}
@@ -206,8 +206,8 @@ const ModalContent: React.FC<ModalContentProps> = ({ selectedProject, setSelecte
         <X size={24} />
       </button>
 
-      {/* HEADER MULTIMEDIA (Constrained Height) */}
-      <div className="relative w-full h-[35vh] md:h-[45vh] shrink-0 bg-neutral-950 overflow-hidden rounded-t-2xl flex items-center justify-center">
+      {/* HEADER MULTIMEDIA (Superior) */}
+      <div className="relative w-full aspect-[4/3] max-h-[45vh] lg:max-h-[50vh] shrink-0 bg-neutral-950 overflow-hidden flex items-center justify-center">
         <img
           src={selectedProject.image}
           className="w-full h-full object-contain grayscale-0"
@@ -225,30 +225,29 @@ const ModalContent: React.FC<ModalContentProps> = ({ selectedProject, setSelecte
             className={"w-full h-full object-contain absolute inset-0 z-20 transition-opacity duration-1000 opacity-100 bg-neutral-950"}
           />
         )}
-
       </div>
 
-      {/* CONTENIDO TEXTO */}
-      <div className="flex-1 overflow-y-auto p-8 md:p-12">
-        <div className="flex flex-col md:flex-row gap-8 justify-between items-start mb-10 border-b border-white/5 pb-8">
+      {/* CONTENIDO TEXTO (Inferior, hace scroll independiente) */}
+      <div className="w-full flex-1 flex flex-col p-6 md:p-8 lg:p-10 overflow-y-auto overflow-x-hidden bg-[#0a0a0a] border-t border-white/5 relative z-10">
+        <div className="flex flex-col md:flex-row gap-6 justify-between items-start mb-8 border-b border-white/5 pb-8">
           <div>
-            <h2 className="text-3xl md:text-5xl font-sans font-semibold text-white mb-2">
+            <h2 className="text-3xl md:text-4xl xl:text-5xl font-sans font-semibold text-white mb-2 leading-tight">
               {selectedProject.title}
             </h2>
-            <p className="text-lg text-neutral-400 font-light">
+            <p className="text-base lg:text-lg text-neutral-400 font-light">
               {selectedProject.shortDescription}
             </p>
           </div>
-          <div className="w-full md:shrink-0 md:w-auto flex flex-row items-center gap-3">
+          <div className="w-full md:shrink-0 md:w-auto flex flex-row flex-wrap items-center gap-3 mt-4 md:mt-0">
             {selectedProject.link && (
               <a
-                href={selectedProject.link} target="_blank" rel="noreferrer" className="flex-1 md:w-auto flex items-center justify-center gap-2 px-4 md:px-6 py-3 bg-white text-black text-xs md:text-sm font-medium rounded-xl hover:bg-neutral-200 transition-colors">
+                href={selectedProject.link} target="_blank" rel="noreferrer" className="flex-1 md:w-auto flex items-center justify-center gap-2 px-4 py-3 bg-white text-black text-xs md:text-sm font-medium rounded-xl hover:bg-neutral-200 transition-colors whitespace-nowrap">
                 Proyecto <ExternalLink size={14} />
               </a>
             )}
             {selectedProject.video && (
               <a
-                href={selectedProject.video} target="_blank" rel="noreferrer" className="flex-1 md:w-auto flex items-center justify-center gap-2 px-4 md:px-6 py-3 bg-[#1a1a1a] text-white border border-white/10 text-xs md:text-sm font-medium rounded-xl hover:bg-neutral-800 transition-colors">
+                href={selectedProject.video} target="_blank" rel="noreferrer" className="flex-1 md:w-auto flex items-center justify-center gap-2 px-4 py-3 bg-[#1a1a1a] text-white border border-white/10 text-xs md:text-sm font-medium rounded-xl hover:bg-neutral-800 transition-colors whitespace-nowrap">
                 Ver Demo
               </a>
             )}
@@ -258,18 +257,16 @@ const ModalContent: React.FC<ModalContentProps> = ({ selectedProject, setSelecte
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-12"
+          className="flex flex-col gap-10"
         >
-          <div className="md:col-span-2">
+          <div>
             <h4 className="font-mono text-xs text-neutral-500 uppercase tracking-widest mb-4">La Historia</h4>
-            <p className="text-neutral-300 font-sans text-base leading-loose whitespace-pre-wrap font-light">{selectedProject.description}</p>
+            <p className="text-neutral-300 font-sans text-sm lg:text-base leading-relaxed whitespace-pre-wrap font-light">{selectedProject.description}</p>
           </div>
-          <div className="space-y-8">
-            <div>
-              <h4 className="font-mono text-xs text-neutral-500 uppercase tracking-widest mb-4">Stack Tecnológico</h4>
-              <div className="flex flex-wrap gap-2">
-                {selectedProject.tech.map((tech) => getTechBadge(tech))}
-              </div>
+          <div>
+            <h4 className="font-mono text-xs text-neutral-500 uppercase tracking-widest mb-4">Stack Tecnológico</h4>
+            <div className="flex flex-wrap gap-2">
+              {selectedProject.tech.map((tech) => getTechBadge(tech))}
             </div>
           </div>
         </motion.div>
@@ -312,7 +309,7 @@ export const Projects: React.FC = () => {
 
   return (
     <section id="projects" className="pt-32 md:pt-40 pb-24 px-6 bg-[#050505]">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -328,7 +325,7 @@ export const Projects: React.FC = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 relative z-10 w-full xl:px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 w-full">
           {projects.map((project) => (
             <ProjectCard key={project.id} project={project} selectedId={selectedId} setSelectedId={setSelectedId} />
           ))}
