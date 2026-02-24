@@ -109,7 +109,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, selectedId, setSelec
             variants={imageVariants}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             src={project.image}
-            alt={project.title}
+            alt={project.imageAlt}
             className={`w-full h-full object-cover object-top absolute inset-0 z-10 transition-opacity duration-500
               ${(isHovered && project.video) ? 'opacity-0' : 'opacity-100'} 
               grayscale group-hover:grayscale-0
@@ -194,7 +194,7 @@ const ModalContent: React.FC<ModalContentProps> = ({ selectedProject, setSelecte
         <img
           src={selectedProject.image}
           className="w-full h-full object-cover object-top grayscale-0"
-          alt={selectedProject.title}
+          alt={selectedProject.imageAlt}
         />
 
         {selectedProject.video && (

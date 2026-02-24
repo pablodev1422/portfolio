@@ -12,6 +12,7 @@ export const projects: Project[] = [
     description: "En 2022, mi empresa necesitaba dar el salto digital. Sin conocimientos previos, dediqué semanas a investigar cómo funcionaban las tiendas online y creé un e-commerce desde cero en Shopify, adaptándolo para previsualizar productos personalizados. Gestioné productos, envíos, SEO y campañas de Ads. Un trabajo de 3 meses que resultó en un negocio funcional y rentable.",
     link: "https://regalograbado.com",
     image: "/images/proyecto-regalo-grabado.png",
+    imageAlt: "Vista del e-commerce B2C Regalo Grabado desarrollado con Shopify",
     video: "/videos/proyecto-regalo-grabado.mp4",
   },
   {
@@ -22,6 +23,7 @@ export const projects: Project[] = [
     description: "Tras la experiencia práctica, decidí formalizar mis conocimientos en el Grado DAM. Aquí descubrí mi verdadera pasión: resolver problemas complejos. No solo toqué mil tecnologías, sino que aprendí a aprender. Mi enfoque cambió de 'hacer que funcione' a 'entender como funciona'.",
     link: null,
     image: "/images/ciclo-desarrollo-aplicaciones-multiplataforma.jpg",
+    imageAlt: "Estudiante programando aplicaciones multiplataforma durante el Grado Superior DAM",
   },
   {
     id: 3,
@@ -31,6 +33,7 @@ export const projects: Project[] = [
     description: "Desarrollo de un sitio corporativo B2B enfocado puramente en Core Web Vitals y SEO técnico. Utilicé el stack moderno de React + Vite desplegado en Vercel para garantizar una carga instantánea. Implementé estrategias de contenido mensual y formularios optimizados para conversión.",
     link: "https://grabadolaser.eu",
     image: "/images/proyecto-grabado-laser.png",
+    imageAlt: "Diseño de sitio web corporativo optimizado para SEO B2B para Grabado Láser",
     video: "/videos/proyecto-grabado-laser.mp4",
   },
   {
@@ -41,6 +44,7 @@ export const projects: Project[] = [
     description: "Una aplicación Full Stack que conecta Shopify con transportistas (Nacex) y marketplaces. Permite gestionar personalización de productos, generar etiquetas de envío automáticamente e imprimir documentación logística. Actualmente integrando la API de Amazon para centralizar todo el negocio en un solo dashboard. Ahorro de costes y eficiencia máxima.",
     link: null,
     image: "/images/proyecto-sistema-gestion-pedidos-personalizados.png",
+    imageAlt: "Dashboard de aplicación Full Stack con Java Spring Boot y React para gestión logística de Amazon y Shopify",
     video: "/videos/proyecto-sistema-gestion-pedidos-personalizados.mp4",
   }
 ];

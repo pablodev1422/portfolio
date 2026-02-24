@@ -8,6 +8,7 @@ export interface Project {
   description: string;
   link: string | null;
   image: string;
+  imageAlt: string;
   video?: string | null;
 }
 
