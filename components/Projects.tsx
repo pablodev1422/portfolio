@@ -304,7 +304,7 @@ export const Projects: React.FC = () => {
         >
           <div>
             <span className="font-mono text-xs text-neutral-500 uppercase tracking-widest mb-2 block">Portfolio</span>
-            <h2 className="text-4xl md:text-5xl font-sans text-white font-light">Proyectos Destacados</h2>
+            <h2 className="text-3xl md:text-5xl font-sans text-white font-light tracking-tight md:tracking-normal">Proyectos Destacados</h2>
           </div>
           <p className="text-neutral-500 text-sm font-light max-w-xs text-right hidden md:block">
             Mis principales retos técnicos y soluciones de negocio reales.
